@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.elementToFadeInAndOut {
+  animation: fadeInOut 3s linear 1 forwards;
+  font-size: 350px;
+  text-align: center;
+  top: 0;
+  left: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  color: darkgoldenrod;
+  display: none;
+}
+
+@keyframes fadeInOut {
+  0% {
+    z-index: 0;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    z-index: 0;
+    opacity: 0;
+  }
+}
