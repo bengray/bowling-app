@@ -9,24 +9,21 @@ const CalculateScore = (frames) => {
 
     totalScore += first + (second || 0) + (third || 0);
 
-    if (i < 9) {
-      if (first === 10) {
-        // Strikes can only occur in the first roll
-        // Handle strike
-        if (frames[i + 1]) {
-          totalScore += frames[i + 1][0];
-          if (frames[i + 1][0] === 10 && frames[i + 2]) {
-            totalScore += frames[i + 2][0];
-          } else {
-            totalScore += frames[i + 1][1] || 0;
-          }
+    if (first === 10) {
+      // Strikes can only occur in the first roll
+      // Handle strike
+      if (frames[i + 1]) {
+        totalScore += frames[i + 1][0];
+        if (frames[i + 1][0] === 10 && frames[i + 2]) {
+          totalScore += frames[i + 2][0];
+        } else {
+          totalScore += frames[i + 1][1] || 0;
         }
-      } else if (first + (second || 0) === 10) {
-        // Spares are the best case scenario on the second roll
-        // Handle spare
-        if (frames[i + 1]) {
-          totalScore += frames[i + 1][0];
-        }
+      }
+    } else if (first + (second || 0) === 10) {
+      // Handle spare
+      if (frames[i + 1]) {
+        totalScore += frames[i + 1][0];
       }
     }
   }
