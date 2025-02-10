@@ -7,14 +7,7 @@ const CalculateScore = (frames) => {
     const frame = frames[i];
     let [first, second, third] = frame;
 
-    // Handle "-" as 0
-    // I know this is a bit hacky, but it's a quick way to handle "-" as 0
-    if (first === "-") first = 0;
-    if (second === "-") second = 0;
-    if (third === "-") third = 0;
-
     totalScore += (first || 0) + (second || 0) + (third || 0);
-
     if (first === 10) {
       // Strikes can only occur in the first roll
       // Handle strike
@@ -40,11 +33,12 @@ const BowlingGame = (toggleStrike) => {
   const toggleStrikeText = toggleStrike.toggleStrike;
   const [frames, setFrames] = useState(
     Array(9)
-      .fill(["-", "-"])
-      .concat([["-", "-", "-"]])
+      .fill([0, 0])
+      .concat([[0, 0, 0]])
   );
   const [currentFrame, setCurrentFrame] = useState(0);
   const [score, setScore] = useState(0);
+  const [isFirstRoll, setIsFirstRoll] = useState(true);
 
   const handleRoll = (pins) => {
     if (currentFrame >= 10) return;
@@ -55,33 +49,37 @@ const BowlingGame = (toggleStrike) => {
     // First 9 frames logic
     if (currentFrame < 9) {
       if (frame[0] + pins > 10) {
+        // Error first
         alert(
           "Are you trying to knock down more than 10 pins? I'm judging you silently from afar."
         );
         return;
       }
-      if (frame[0] === "-" && frame[1] === "-") {
+
+      if (frame[0] === 0 && frame[1] === 0 && isFirstRoll) {
+        setIsFirstRoll(false);
         frame[0] = pins;
         if (pins === 10) {
           // Strike
           toggleStrikeText();
+          setIsFirstRoll(true);
           setCurrentFrame(currentFrame + 1);
         }
-      } else if (frame[1] === "-") {
+      } else if (frame[1] === 0) {
         frame[1] = pins;
+        setIsFirstRoll(true);
         setCurrentFrame(currentFrame + 1);
       }
     } else {
       // 10th frame logic
-      if (frame[0] === "-" && frame[1] === "-") {
+      if (frame[0] === 0 && frame[1] === 0) {
         frame[0] = pins;
-      } else if (frame[1] === "-") {
+      } else if (frame[1] === 0) {
         frame[1] = pins;
       } else if (frame[0] === 10 || frame[0] + frame[1] === 10) {
         frame[2] = pins;
       }
     }
-
     newFrames[currentFrame] = frame;
     setFrames(newFrames);
     setScore(CalculateScore(newFrames));
