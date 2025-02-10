@@ -1,17 +1,19 @@
 import BowlingGame from "./BowlingGame";
+import { useRef } from "react";
 
 export default function Body() {
+  const strike = useRef(null);
+
   const toggleStrike = () => {
-    const strike = document.getElementById("strike");
-    strike.style.display = "block";
+    strike.current.style.display = "block";
     setTimeout(() => {
-      strike.style.display = "none";
+      strike.current.style.display = "none";
     }, 3000);
   };
 
   return (
     <main>
-      <div id="strike" className="elementToFadeInAndOut">
+      <div ref={strike} className="elementToFadeInAndOut">
         STRIKE!
       </div>
       <BowlingGame toggleStrike={toggleStrike} />

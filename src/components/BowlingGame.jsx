@@ -5,9 +5,15 @@ const CalculateScore = (frames) => {
   let totalScore = 0;
   for (let i = 0; i < 10; i++) {
     const frame = frames[i];
-    const [first, second, third] = frame;
+    let [first, second, third] = frame;
 
-    totalScore += first + (second || 0) + (third || 0);
+    // Handle "-" as 0
+    // I know this is a bit hacky, but it's a quick way to handle "-" as 0
+    if (first === "-") first = 0;
+    if (second === "-") second = 0;
+    if (third === "-") third = 0;
+
+    totalScore += (first || 0) + (second || 0) + (third || 0);
 
     if (first === 10) {
       // Strikes can only occur in the first roll
@@ -34,8 +40,8 @@ const BowlingGame = (toggleStrike) => {
   const toggleStrikeText = toggleStrike.toggleStrike;
   const [frames, setFrames] = useState(
     Array(9)
-      .fill([0, 0])
-      .concat([[0, 0, 0]])
+      .fill(["-", "-"])
+      .concat([["-", "-", "-"]])
   );
   const [currentFrame, setCurrentFrame] = useState(0);
   const [score, setScore] = useState(0);
@@ -50,26 +56,26 @@ const BowlingGame = (toggleStrike) => {
     if (currentFrame < 9) {
       if (frame[0] + pins > 10) {
         alert(
-          "Are you trying to knock down more than 10 pins? I'm judging you silently."
+          "Are you trying to knock down more than 10 pins? I'm judging you silently from afar."
         );
         return;
       }
-      if (frame[0] === 0 && frame[1] === 0) {
+      if (frame[0] === "-" && frame[1] === "-") {
         frame[0] = pins;
         if (pins === 10) {
           // Strike
           toggleStrikeText();
           setCurrentFrame(currentFrame + 1);
         }
-      } else if (frame[1] === 0) {
+      } else if (frame[1] === "-") {
         frame[1] = pins;
         setCurrentFrame(currentFrame + 1);
       }
     } else {
       // 10th frame logic
-      if (frame[0] === 0 && frame[1] === 0) {
+      if (frame[0] === "-" && frame[1] === "-") {
         frame[0] = pins;
-      } else if (frame[1] === 0) {
+      } else if (frame[1] === "-") {
         frame[1] = pins;
       } else if (frame[0] === 10 || frame[0] + frame[1] === 10) {
         frame[2] = pins;
@@ -93,9 +99,16 @@ const BowlingGame = (toggleStrike) => {
 
   return (
     <>
-      <div>
-        <p>Score: {score}</p>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          fontSize: "28px",
+          marginBottom: "20px",
+        }}
+      >
+        Score: {score}
+      </Box>
       <Box
         sx={{
           display: "flex",
